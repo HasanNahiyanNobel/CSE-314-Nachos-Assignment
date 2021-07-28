@@ -277,6 +277,10 @@ public class KThread {
 
 	Lib.assertTrue(this != currentThread);
 
+	while (this.status != statusFinished) {
+		// Do nothing
+	}
+
     }
 
     /**
