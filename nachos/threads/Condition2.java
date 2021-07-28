@@ -34,7 +34,7 @@ public class Condition2 {
 	Lib.assertTrue(conditionLock.isHeldByCurrentThread());
 
 	conditionLock.release();
-
+	KThread.sleep();
 	conditionLock.acquire();
     }
 
@@ -44,6 +44,7 @@ public class Condition2 {
      */
     public void wake() {
 	Lib.assertTrue(conditionLock.isHeldByCurrentThread());
+	KThread.currentThread().ready();
     }
 
     /**
