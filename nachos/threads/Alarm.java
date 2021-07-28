@@ -46,8 +46,12 @@ public class Alarm {
      */
     public void waitUntil(long x) {
 	// for now, cheat just to get something working (busy waiting is bad)
-	long wakeTime = Machine.timer().getTime() + x;
+	/*long wakeTime = Machine.timer().getTime() + x;
 	while (wakeTime > Machine.timer().getTime())
-	    KThread.yield();
+	    KThread.yield();*/
+	long minimumNumberOfInterrupts = x%500==0 ? x/500 : (x/500)+1;
+	for (int i = 0; i<minimumNumberOfInterrupts; i++) {
+		timerInterrupt();
+	}
     }
 }
