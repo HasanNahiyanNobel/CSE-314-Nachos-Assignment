@@ -7,6 +7,8 @@ import nachos.machine.*;
  * until a certain time.
  */
 public class Alarm {
+	int minimumNumberOfInterrupts;
+
 	/**
 	 * Allocate a new Alarm. Set the machine's timer interrupt handler to this
 	 * alarm's callback.
@@ -15,6 +17,7 @@ public class Alarm {
 	 * alarm.
 	 */
 	public Alarm () {
+		minimumNumberOfInterrupts = 0;
 		Machine.timer().setInterruptHandler(new Runnable() {
 			public void run () {
 				timerInterrupt();
@@ -30,6 +33,7 @@ public class Alarm {
 	 */
 	public void timerInterrupt () {
 		KThread.currentThread().yield();
+		minimumNumberOfInterrupts--;
 	}
 
 	/**
@@ -42,17 +46,17 @@ public class Alarm {
 	 * (current time) >= (WaitUntil called time)+(x)
 	 * </blockquote>
 	 *
-	 * @param    x    the minimum number of clock ticks to wait.
-	 * @see    nachos.machine.Timer#getTime()
+	 * @param x the minimum number of clock ticks to wait.
+	 * @see nachos.machine.Timer#getTime()
 	 */
 	public void waitUntil (long x) {
 		// for now, cheat just to get something working (busy waiting is bad)
 	/*long wakeTime = Machine.timer().getTime() + x;
 	while (wakeTime > Machine.timer().getTime())
 	    KThread.yield();*/
-		long minimumNumberOfInterrupts = x % 500 == 0 ? x / 500 : (x / 500) + 1;
-		for (int i = 0; i < minimumNumberOfInterrupts; i++) {
-			timerInterrupt();
+		minimumNumberOfInterrupts = (int) x % 500 == 0 ? (int) x / 500 : (int) ((x / 500) + 1);
+		while (minimumNumberOfInterrupts > 0) {
+			// Wait
 		}
 	}
 }
